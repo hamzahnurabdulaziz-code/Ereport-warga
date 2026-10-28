@@ -1,8 +1,30 @@
 <div>
     <span class="text-xs font-bold tracking-widest text-blue-600">MULAI PERUBAHAN DARI SINI</span>
-    <h1 class="mt-3 font-display text-3xl font-bold tracking-tight">Buat akun warga</h1>
-    <p class="mt-3 text-sm text-slate-500">Satu akun untuk menyampaikan dan memantau pengaduan.</p>
+    <h1 class="mt-3 font-display text-3xl font-bold tracking-tight">Buat akun baru</h1>
+    <p class="mt-3 text-sm text-slate-500">Pilih peran dan isi data untuk mengakses sistem E-Report.</p>
     <form wire:submit="register" class="mt-7 space-y-4">
+        <div>
+            <label class="mb-2 block text-sm font-semibold text-slate-700">Peran Pengguna (Role)</label>
+            <div class="grid grid-cols-2 gap-3">
+                <label class="flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 cursor-pointer hover:border-blue-500 transition has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/60">
+                    <input type="radio" wire:model.live="role" value="warga" class="text-blue-600 focus:ring-blue-500">
+                    <div>
+                        <span class="block text-sm font-bold text-slate-800">Warga</span>
+                        <span class="block text-xs text-slate-500">Membuat laporan</span>
+                    </div>
+                </label>
+                <label class="flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 cursor-pointer hover:border-blue-500 transition has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/60">
+                    <input type="radio" wire:model.live="role" value="admin" class="text-blue-600 focus:ring-blue-500">
+                    <div>
+                        <span class="block text-sm font-bold text-slate-800">Admin</span>
+                        <span class="block text-xs text-slate-500">Mengurus laporan</span>
+                    </div>
+                </label>
+            </div>
+            @error('role')
+                <p role="alert" class="mt-2 text-sm text-red-600">{{ $message }}</p>
+            @enderror
+        </div>
         <div>
             <label for="name" class="mb-2 block text-sm font-semibold text-slate-700">Nama lengkap</label>
             <input

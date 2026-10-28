@@ -27,6 +27,8 @@ class Register extends Component
 
     public string $password_confirmation = '';
 
+    public string $role = 'warga';
+
     public function register(): void
     {
         $key = 'register:'.request()->ip();
@@ -40,18 +42,29 @@ class Register extends Component
             'no_whatsapp' => ['required', 'regex:/^\+?[0-9]{9,15}$/'],
             'alamat' => 'required|string|max:2000',
             'password' => ['required', 'string', 'max:255', 'confirmed', Password::min(8)->letters()->numbers()],
+            'role' => 'nullable|string|in:warga,admin',
         ]);
         RateLimiter::hit($key, 3600);
-        $user = new User($data);
-        $user->role = 'warga';
+        $user = new User([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'no_whatsapp' => $data['no_whatsapp'],
+            'alamat' => $data['alamat'],
+            'password' => $data['password'],
+        ]);
+        $user->role = in_array($this->role, ['warga', 'admin'], true) ? $this->role : 'warga';
         $user->save();
         Auth::login($user);
         session()->regenerate();
-        $this->redirectRoute('warga.dashboard');
+        if ($user->role === 'admin') {
+            $this->redirectRoute('admin.dashboard');
+        } else {
+            $this->redirectRoute('warga.dashboard');
+        }
     }
 
     public function render(): View
     {
-        return view('livewire.auth.register')->title('Daftar Warga');
+        return view('livewire.auth.register')->title('Daftar Akun');
     }
 }

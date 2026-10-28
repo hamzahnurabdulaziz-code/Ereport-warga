@@ -42,8 +42,26 @@ class EReportTest extends TestCase
 
         $user = User::firstOrFail();
         $this->assertSame('warga', $user->role);
+        $this->assertTrue($user->isWarga());
+        $this->assertFalse($user->isAdmin());
         $this->assertSame('ayu@example.test', $user->email);
         $this->assertTrue(Hash::check('Password123!', $user->password));
+        $this->assertAuthenticatedAs($user);
+    }
+
+    public function test_registration_can_create_admin_and_redirect_to_admin_dashboard(): void
+    {
+        Livewire::test(Auth\Register::class)
+            ->set('role', 'admin')
+            ->set('name', 'Admin Petugas')->set('email', 'petugas@example.test')
+            ->set('no_whatsapp', '081234567899')->set('alamat', 'Kantor Desa Sentul')
+            ->set('password', 'Password123!')->set('password_confirmation', 'Password123!')
+            ->call('register')->assertHasNoErrors()->assertRedirect(route('admin.dashboard'));
+
+        $user = User::firstOrFail();
+        $this->assertSame('admin', $user->role);
+        $this->assertTrue($user->isAdmin());
+        $this->assertFalse($user->isWarga());
         $this->assertAuthenticatedAs($user);
     }
 

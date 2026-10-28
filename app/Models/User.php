@@ -31,4 +31,14 @@ class User extends Authenticatable
     {
         return $this->role === 'admin' ? 'admin.dashboard' : 'warga.dashboard';
     }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isWarga(): bool
+    {
+        return $this->role === 'warga';
+    }
 }
