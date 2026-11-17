@@ -6,6 +6,8 @@ use App\Livewire\Auth;
 use App\Livewire\Warga;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/health', static fn () => response()->json(['status' => 'ok', 'framework' => 'Laravel']));
+
 Route::view('/', 'welcome')->name('home');
 Route::middleware('guest')->group(function (): void {
     Route::livewire('/login', Auth\Login::class)->name('login');
